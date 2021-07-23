@@ -1,0 +1,32 @@
+{
+  "name" : "landofcoder/module-magento2-unicode-url",
+  "description" : "Magento 2 module for allowing categories and products UTF-8 URL keys",
+  "type" : "magento2-module",
+  "version" : "0.0.4",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Landofcoder",
+      "email": "info@landofcoder.com",
+      "homepage": "https://landofcoder.com",
+      "role": "Magento 2 Extension Provider"
+    }
+  ],
+  "support": {
+    "email": "info@landofcoder.com"
+  },
+  "keywords": [
+    "landofcoder",
+    "landofcoder unicode url",
+    "unicode url for magento 2"
+  ],
+  "autoload": {
+    "files": [ "registration.php" ],
+    "psr-4": {
+      "Lof\\UnicodeUrl\\": ""
+    }
+  }
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Landofcoder
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Landofcoder.com license that is
+ * available through the world-wide-web at this URL:
+ * https://landofcoder.com/license
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category   Landofcoder
+ * @package    Lof_UnicodeUrl
+ * @copyright  Copyright (c) 2021 Landofcoder (https://landofcoder.com/)
+ * @license    https://landofcoder.com/LICENSE-1.0.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Filter\FilterManager\Config">
+        <arguments>
+            <argument name="factories" xsi:type="array">
+                <item xsi:type="string" name="lof_unicodeurl_filter_factory">\Lof\UnicodeUrl\Filter\Factory</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Catalog\Model\Product\Url">
+        <plugin name="lof_unicodeurl_product_url" type="Lof\UnicodeUrl\Plugin\Product\Url"/>
+    </type>
+
+    <type name="Magento\Catalog\Model\Category">
+        <plugin name="lof_unicodeurl_catalog_magento_catalog_model_category" type="Lof\UnicodeUrl\Plugin\Model\Category"/>
+    </type>
+
+    <type name="Magento\Store\App\Request\PathInfoProcessor">
+        <plugin name="lof_unicodeurl_request_path_info_processor"
+                type="Lof\UnicodeUrl\Plugin\MagentoStore\App\Request\PathInfoProcessor"/>
+    </type>
+    <preference for="Magento\Cms\Model\ResourceModel\Page"
+                type="Lof\UnicodeUrl\Plugin\Model\ResourceModel\PagePlugin"/>
+</config>
