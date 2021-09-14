@@ -24,17 +24,17 @@ use LanguageDetection\Language;
 
 class AbstractTranslitUrl implements \Zend_Filter_Interface
 {
-
     public function filter($value)
     {
         $ld = new Language;
         $languages = $ld->detect($value)->close();
         if ($languages && count($languages) >= 3) {
-            $newLanguages = [
-                $languages[0],
-                $languages[1],
-                $languages[2]
-            ];
+            $newLanguages = [];
+            foreach ($languages as $key => $val) {
+                if ((float)$val > 0 && count($newLanguages) < 3) {
+                    $newLanguages[] = $key;
+                }
+            }
             if (in_array("ru", $newLanguages)) {
                 return $this->filterRussian($value);
             }
