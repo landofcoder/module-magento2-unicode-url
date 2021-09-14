@@ -7,6 +7,9 @@
     "OSL-3.0",
     "AFL-3.0"
   ],
+  "require": {
+    "patrickschur/language-detection": "^5.1"
+  },
   "authors": [
     {
       "name": "Landofcoder",
