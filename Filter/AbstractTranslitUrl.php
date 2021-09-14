@@ -20,12 +20,31 @@
  */
 namespace Lof\UnicodeUrl\Filter;
 
+use LanguageDetection\Language;
+
 class AbstractTranslitUrl implements \Zend_Filter_Interface
 {
-
     public function filter($value)
     {
+        $ld = new Language;
+        $languages = $ld->detect($value)->close();
+        if ($languages && count($languages) >= 3) {
+            $newLanguages = [];
+            foreach ($languages as $key => $val) {
+                if ((float)$val > 0 && count($newLanguages) < 3) {
+                    $newLanguages[] = $key;
+                }
+            }
+            if (in_array("ru", $newLanguages)) {
+                return $this->filterRussian($value);
+            }
+        }
         return urldecode($this->sanitize($value));
+    }
+    
+    public function filterRussian($value)
+    {
+        return $this->transliterate($value);
     }
 
     /**
@@ -35,7 +54,7 @@ class AbstractTranslitUrl implements \Zend_Filter_Interface
      * @param string $value The url key to be sanitized.
      * @return string
      */
-    function sanitize($value)
+    protected function sanitize($value)
     {
         $urlKey = strip_tags($value);
         // Preserve escaped octets.
@@ -71,7 +90,7 @@ class AbstractTranslitUrl implements \Zend_Filter_Interface
      * @param int $length Max  length of the string
      * @return string String with Unicode encoded for URI.
      */
-    function utf8UriEncode($utf8_string, $length = 0)
+    protected function utf8UriEncode($utf8_string, $length = 0)
     {
         $unicode = '';
         $values = array();
@@ -120,7 +139,7 @@ class AbstractTranslitUrl implements \Zend_Filter_Interface
      * @param string $str
      * @return string
      */
-    function seemsUtf8($str)
+    protected function seemsUtf8($str)
     {
         $this->mbstringBinarySafeEncoding(false);
         $length = strlen($str);
@@ -143,7 +162,7 @@ class AbstractTranslitUrl implements \Zend_Filter_Interface
 
     }
 
-    function mbstringBinarySafeEncoding($reset)
+    protected function mbstringBinarySafeEncoding($reset)
     {
         static $encodings = array();
         static $overloaded = null;
@@ -164,6 +183,12 @@ class AbstractTranslitUrl implements \Zend_Filter_Interface
             $encoding = array_pop($encodings);
             mb_internal_encoding($encoding);
         }
+    }
+
+    protected function transliterate($string) {
+        $roman = array("Sch","sch",'Yo','Zh','Kh','Ts','Ch','Sh','Yu','ya','yo','zh','kh','ts','ch','sh','yu','ya','A','B','V','G','D','E','Z','I','Y','K','L','M','N','O','P','R','S','T','U','F','','Y','','E','a','b','v','g','d','e','z','i','y','k','l','m','n','o','p','r','s','t','u','f','','y','','e');
+        $cyrillic = array("Щ","щ",'Ё','Ж','Х','Ц','Ч','Ш','Ю','я','ё','ж','х','ц','ч','ш','ю','я','А','Б','В','Г','Д','Е','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Ь','Ы','Ъ','Э','а','б','в','г','д','е','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','ь','ы','ъ','э');
+        return str_replace($cyrillic, $roman, $string);
     }
 
 
